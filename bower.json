@@ -16,8 +16,7 @@
   "dependencies": {
     "jquery": "^2.0.3",
     "chosen": "^1.5.1",
-    "angular": "^1.4.9",
-    "angular-chosen-localytics": "^1.7.0"
+    "angular": "^1.4.9"
   },
   "license": "MIT"
 }
