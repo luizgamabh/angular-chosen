@@ -164,7 +164,8 @@ chosenModule.directive 'chosen', ['chosen', '$timeout', (config, $timeout) ->
         initOrUpdate()
 
       element.on 'chosen:hiding_dropdown', ->
-        scope.$apply -> ngModel.$setTouched()
+        $timeout(-> ngModel.$setTouched())
+        #scope.$apply -> ngModel.$setTouched()
 
       # This is basically taken from angular ngOptions source.  ngModel watches reference, not value,
       # so when values are added or removed from array ngModels, $render won't be fired.
