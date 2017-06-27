@@ -8,9 +8,46 @@
   var chosenModule,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  angular.module('localytics.directives', []);
+  (function($) {
+    $.fn.chosenImage = function(options) {
+      return this.each(function() {
+        var $chosen, $select, cssObj, imgMap;
+        $select = $(this);
+        imgMap = {};
+        cssObj = function(imgSrc) {
+          var bgImg;
+          bgImg = imgSrc ? 'url(' + imgSrc + ')' : 'none';
+          return {
+            'background-image': bgImg
+          };
+        };
+        $select.find('option').filter(function() {
+          return $(this).text();
+        }).each(function(i) {
+          imgMap[i] = $(this).attr('data-img-src');
+        });
+        $select.chosen(options);
+        $chosen = $select.next('.chosen-container').addClass('chosenImage-container');
+        $chosen.on('click.chosen, mousedown.chosen, keyup.chosen', function(event) {
+          $chosen.find('.chosen-results li').each(function() {
+            var imgIndex;
+            imgIndex = $(this).attr('data-option-array-index');
+            $(this).css(cssObj(imgMap[imgIndex]));
+          });
+        });
+        $select.change(function() {
+          var imgSrc;
+          imgSrc = $select.find('option:selected').attr('data-img-src') || '';
+          $chosen.find('.chosen-single span').css(cssObj(imgSrc));
+        });
+        $select.trigger('change');
+      });
+    };
+  })(jQuery);
 
-  chosenModule = angular.module('localytics.directives');
+  angular.module('chosen.image', []);
+
+  chosenModule = angular.module('chosen.image');
 
   chosenModule.provider('chosen', function() {
     var options;
@@ -94,7 +131,7 @@
               return element.trigger('chosen:updated');
             } else {
               scope.$evalAsync(function() {
-                chosen = element.chosen(options).data('chosen');
+                chosen = element.chosenImage(options).data('chosen');
               });
               if (angular.isObject(chosen)) {
                 return defaultText = chosen.default_text;

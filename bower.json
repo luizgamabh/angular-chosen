@@ -1,10 +1,13 @@
 {
-  "name": "angular-chosen-localytics",
+  "name": "angular-chosen-image",
   "repository": {
     "type": "git",
-    "url": "git://github.com/leocaseiro/angular-chosen.git"
+    "url": "git://github.com/luizgamabh/angular-chosen-image.git"
   },
-  "main": "dist/angular-chosen.js",
+  "main": [
+    "styles/chosen-image.css",
+    "dist/angular-chosen.js"
+  ],
   "ignore": [
     "gulpfile.js",
     "src",
@@ -13,7 +16,8 @@
   "dependencies": {
     "jquery": "^2.0.3",
     "chosen": "^1.5.1",
-    "angular": "^1.4.9"
+    "angular": "^1.4.9",
+    "angular-chosen-localytics": "^1.7.0"
   },
   "license": "MIT"
 }

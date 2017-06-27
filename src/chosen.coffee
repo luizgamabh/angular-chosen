@@ -1,6 +1,49 @@
-angular.module('localytics.directives', [])
+# jQuery
 
-chosenModule = angular.module('localytics.directives')
+(($) ->
+  $.fn.chosenImage = (options) ->
+    @each ->
+      $select = $(this)
+      imgMap = {}
+      # 1. Retrieve img-src from data attribute and build object of image sources for each list item.
+      # Utilties
+
+      cssObj = (imgSrc) ->
+        bgImg = if imgSrc then 'url(' + imgSrc + ')' else 'none'
+        { 'background-image': bgImg }
+
+      $select.find('option').filter(->
+        $(this).text()
+      ).each (i) ->
+        imgMap[i] = $(this).attr('data-img-src')
+        return
+      # 2. Execute chosen plugin and get the newly created chosen container.
+      $select.chosen options
+      $chosen = $select.next('.chosen-container').addClass('chosenImage-container')
+      # 3. Style lis with image sources.
+      $chosen.on 'click.chosen, mousedown.chosen, keyup.chosen', (event) ->
+        $chosen.find('.chosen-results li').each ->
+          imgIndex = $(this).attr('data-option-array-index')
+          $(this).css cssObj(imgMap[imgIndex])
+          return
+        return
+      # 4. Change image on chosen selected element when form changes.
+      $select.change ->
+        imgSrc = $select.find('option:selected').attr('data-img-src') or ''
+        $chosen.find('.chosen-single span').css cssObj(imgSrc)
+        return
+      $select.trigger 'change'
+      return
+
+  return
+) jQuery
+
+
+# Angular
+
+angular.module('chosen.image', [])
+
+chosenModule = angular.module('chosen.image')
 
 chosenModule.provider 'chosen', ->
   options = {}
@@ -100,7 +143,7 @@ chosenModule.directive 'chosen', ['chosen', '$timeout', (config, $timeout) ->
         return element.trigger('chosen:updated')
       else
         scope.$evalAsync ->
-         chosen = element.chosen(options).data('chosen')
+         chosen = element.chosenImage(options).data('chosen')
          return
         if angular.isObject(chosen)
           defaultText = chosen.default_text
