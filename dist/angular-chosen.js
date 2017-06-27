@@ -153,7 +153,7 @@
               return initOrUpdate();
             };
             element.on('chosen:hiding_dropdown', function() {
-              return scope.$apply(function() {
+              return $timeout(function() {
                 return ngModel.$setTouched();
               });
             });
